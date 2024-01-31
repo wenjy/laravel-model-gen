@@ -5,10 +5,14 @@
 ### 使用说明
 
 - 引入包
-`composer require --dev wenjy/laravel-model-gen`
+```shell
+composer require --dev wenjy/laravel-model-gen
+```
 
 - 执行生成
-`php artisan gen:model [tableName] [modelClass]`
+```shell
+php artisan gen:model [tableName] [modelClass]
+```
 
 参数表名：tableName
 不传入表名，默认生成所有表的model，使用默认的数据库连接
@@ -18,7 +22,8 @@
 
 - 举例
 
-```
+test_comments 表结构为：
+```sql
 CREATE TABLE `test_comments` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '评论标题',
@@ -29,9 +34,10 @@ CREATE TABLE `test_comments` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 ```
 
-`php artisan gen:model test_comments`
+执行 `php artisan gen:model test_comments`
 
-```
+会生成文件`TestComment`
+```php
 <?php
 
 namespace App\Models;
