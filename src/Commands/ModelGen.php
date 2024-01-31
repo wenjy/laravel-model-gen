@@ -54,6 +54,15 @@ class ModelGen extends Command
         echo "The following files will be generated:\n";
         $skipAll = null;
         $answers = [];
+        $choice_question = <<<EOF
+Do you want to overwrite this file?
+    y:Overwrite this file.
+    n:Skip this file.
+    ya:Overwrite this and the rest of the changed files.
+    na:Skip this and the rest of the changed files.
+    v:View difference.
+EOF;
+
         foreach ($files as $file) {
             $path = $file->getRelativePath();
             if (is_file($file->path)) {
@@ -71,13 +80,7 @@ class ModelGen extends Command
                         $answers[$file->id] = !$skipAll;
                     } else {
                         do {
-                            $answer = $this->choice("Do you want to overwrite this file?
-                            y:Overwrite this file.
-                            n:Skip this file.
-                            ya:Overwrite this and the rest of the changed files.
-                            na:Skip this and the rest of the changed files.
-                            v:View difference
-                            ", [
+                            $answer = $this->choice($choice_question, [
                                 'y' ,
                                 'n' ,
                                 'ya' ,
