@@ -52,7 +52,7 @@ class ModelGen extends Command
             return;
         }
         echo "The following files will be generated:\n";
-        $skipAll = true;
+        $skipAll = null;
         $answers = [];
         foreach ($files as $file) {
             $path = $file->getRelativePath();
