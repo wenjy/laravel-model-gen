@@ -120,10 +120,27 @@ class Generator extends BaseGenerator
     protected function getTableSchemas(): array
     {
         if (empty($this->tableSchemas)) {
-            $this->tableSchemas = Arr::pluck(Schema::getTables(), null, 'name');
+            $this->tableSchemas = Arr::pluck($this->getTables(), null, 'name');
         }
 
         return $this->tableSchemas;
+    }
+
+    protected function getTables(): array
+    {
+        if (version_compare('10.0.0', app()->version()) === 1) {
+            $sql = sprintf(
+                'select table_name as `name`, (data_length + index_length) as `size`, '
+                .'table_comment as `comment`, engine as `engine`, table_collation as `collation` '
+                ."from information_schema.tables where table_schema = '%s' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') "
+                .'order by table_name', $this->getDbConnection()->getDatabaseName());
+            $tables = DB::select($sql);
+            foreach ($tables as &$table) {
+                $table = (array)$table;
+            }
+            return $tables;
+        }
+        return Schema::getTables();
     }
 
     protected function getTableSchema(string $table): array
@@ -136,8 +153,30 @@ class Generator extends BaseGenerator
         if (!empty($this->tableColumns[$table])) {
             return $this->tableColumns[$table];
         }
-        $this->tableColumns[$table] = Arr::pluck(Schema::getColumns($table), null, 'name');
+        $this->tableColumns[$table] = Arr::pluck($this->getColumns($table), null, 'name');
         return $this->tableColumns[$table];
+    }
+
+    protected function getColumns(string $table): array
+    {
+        if (version_compare('10.0.0', app()->version()) === 1) {
+            $sql = sprintf(
+                'select column_name as `name`, data_type as `type_name`, column_type as `type`, '
+                .'collation_name as `collation`, is_nullable as `nullable`, '
+                .'column_default as `default`, column_comment as `comment`, extra as `extra` '
+                ."from information_schema.columns where table_schema = '%s' and table_name = '%s' "
+                .'order by ordinal_position asc', DB::connection()->getDatabaseName(), $table);
+
+            $columns = DB::select($sql);
+            foreach ($columns as &$column) {
+                $column = (array)$column;
+                $column['nullable'] = $column['nullable'] == 'YES';
+                $column['auto_increment'] = $column['extra'] == 'auto_increment';
+                unset($column['extra']);
+            }
+            return $columns;
+        }
+        return Schema::getColumns($table);
     }
 
     /**

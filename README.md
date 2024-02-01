@@ -71,3 +71,7 @@ class TestComment extends Model
 }
 
 ```
+
+### 注意
+
+laravel 8、laravel 9 只支持MySql（其它的数据库没有把SQL复制过来），laravel 10原生支持`Schema::getColumns` `Schema::getTables()`
