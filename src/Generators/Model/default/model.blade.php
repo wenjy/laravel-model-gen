@@ -11,6 +11,9 @@
 
 echo "<?php\n";
 ?>
+/**
+ * @date: <?= date('Y-m-d H:i:s') . "\n" ?>
+ */
 
 namespace <?= $generator->ns ?>;
 

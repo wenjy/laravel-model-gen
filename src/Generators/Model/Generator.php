@@ -98,7 +98,7 @@ class Generator extends BaseGenerator
             if (str_contains($column['type_name'], 'int')) {
                 $type = 'int';
             } elseif ($column['name'] == 'created_at' || $column['name'] == 'updated_at') {
-                $type = '\Carbon\Carbon';
+                $type = '\Illuminate\Support\Carbon';
             } else {
                 $type = 'string';
             }
