@@ -7,6 +7,7 @@ namespace WenGen\Commands;
 
 use Illuminate\Console\Command;
 use WenGen\Generators\Model\Generator as ModelGenerator;
+use WenGen\GenException;
 
 class ModelGen extends Command
 {
@@ -15,7 +16,10 @@ class ModelGen extends Command
      *
      * @var string
      */
-    protected $signature = 'gen:model {tableName?} {modelClass?}';
+    protected $signature = 'gen:model
+                            {--table= : table name}
+                            {--model= : model name}
+                            {--conn= : database connection name}';
 
     /**
      * The console command description.
@@ -37,10 +41,15 @@ class ModelGen extends Command
      */
     public function handle()
     {
-        $this->generator->tableName = $this->argument('tableName') ?? '*';
-        $this->generator->modelClass = $this->argument('modelClass');
+        $this->generator->tableName = $this->option('table') ?? '*';
+        $this->generator->modelClass = $this->option('model');
+        $this->generator->db = $this->option('conn');
         $this->info("Running '{$this->generator->getName()}'...");
-        $this->generateCode();
+        try {
+            $this->generateCode();
+        }catch (GenException $e) {
+            $this->warn($e->getMessage());
+        }
     }
 
     protected function generateCode()
@@ -48,10 +57,10 @@ class ModelGen extends Command
         $files = $this->generator->generate();
         $n = count($files);
         if ($n === 0) {
-            echo "No code to be generated.\n";
+            $this->warn('No code to be generated.');
             return;
         }
-        echo "The following files will be generated:\n";
+        $this->info('The following files will be generated:');
         $skipAll = null;
         $answers = [];
         $choice_question = <<<EOF

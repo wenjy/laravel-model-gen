@@ -14,7 +14,7 @@ class ModelGenerateTest extends TestCase
 {
     public function testGenerate()
     {
-        $this->artisan(ModelGen::class, ['tableName' => 'test_comments']);
+        $this->artisan(ModelGen::class, ['--table' => 'test_comments']);
         $this->assertTrue(true);
     }
 

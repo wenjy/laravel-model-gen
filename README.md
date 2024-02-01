@@ -11,14 +11,17 @@ composer require --dev wenjy/laravel-model-gen
 
 - 执行生成
 ```shell
-php artisan gen:model [tableName] [modelClass]
+php artisan gen:model [--table=] [--model=] [--conn=]
 ```
 
-参数表名：tableName
-不传入表名，默认生成所有表的model，使用默认的数据库连接
+参数表名：table
+不传入表名，默认生成所有表的model
 
-参数模型类名：modelClass
+参数模型类名：model
 不传入模型类名，使用表名单数大驼峰命名方式
+
+参数数据库连接名：conn
+不传入数据库连接名，使用默认的数据库连接
 
 - 举例
 
@@ -31,15 +34,18 @@ CREATE TABLE `test_comments` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='测试评论表';
 ```
 
-执行 `php artisan gen:model test_comments`
+执行 `php artisan gen:model --table=test_comments`
 
 会生成文件`TestComment`
 ```php
 <?php
-
+/**
+ * @date: 2024-01-31 20:17:19
+ */
+ 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -49,8 +55,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $title 评论标题
  * @property int $post_id 文章ID
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  */
 class TestComment extends Model
 {

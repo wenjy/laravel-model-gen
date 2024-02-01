@@ -2,6 +2,7 @@
 
 namespace WenGen\Generators\Model;
 
+use Illuminate\Database\Connection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +18,15 @@ use WenGen\Generator as BaseGenerator;
 class Generator extends BaseGenerator
 {
 
+    /**
+     * 数据库连接名称
+     * @var string|null
+     */
     public $db = null;
 
+    /**
+     * @var string
+     */
     public $ns = 'App\Models';
 
     /**
@@ -31,7 +39,14 @@ class Generator extends BaseGenerator
      */
     protected $tableNames;
 
+    /**
+     * @var array
+     */
     protected array $tableSchemas = [];
+
+    /**
+     * @var array
+     */
     protected array $tableColumns = [];
 
     /**
@@ -51,6 +66,15 @@ class Generator extends BaseGenerator
         return 'Model Generator';
     }
 
+    public function __construct()
+    {
+        parent::__construct();
+        Schema::connection($this->db);
+    }
+
+    /**
+     * @return array
+     */
     public function generate()
     {
         $files = [];
@@ -78,7 +102,12 @@ class Generator extends BaseGenerator
         return $files;
     }
 
-    protected function render($template, $params = [])
+    /**
+     * @param string $template
+     * @param array $params
+     * @return string
+     */
+    protected function render(string $template, array $params = []): string
     {
         $params['generator'] = $this;
 
@@ -86,11 +115,19 @@ class Generator extends BaseGenerator
         return View::file($path, $params)->render();
     }
 
+    /**
+     * @return Connection
+     */
     protected function getDbConnection()
     {
         return DB::connection($this->db);
     }
 
+    /**
+     * Generates the properties for the specified table.
+     * @param array $columns the table columns
+     * @return array the generated properties (property => type)
+     */
     protected function generateProperties(array $columns)
     {
         $properties = [];
@@ -117,6 +154,9 @@ class Generator extends BaseGenerator
         return $properties;
     }
 
+    /**
+     * @return array
+     */
     protected function getTableSchemas(): array
     {
         if (empty($this->tableSchemas)) {
@@ -126,6 +166,9 @@ class Generator extends BaseGenerator
         return $this->tableSchemas;
     }
 
+    /**
+     * @return array
+     */
     protected function getTables(): array
     {
         if (version_compare('10.0.0', app()->version()) === 1) {
@@ -143,11 +186,19 @@ class Generator extends BaseGenerator
         return Schema::getTables();
     }
 
+    /**
+     * @param string $table
+     * @return array
+     */
     protected function getTableSchema(string $table): array
     {
         return $this->getTableSchemas()[$table] ?? [];
     }
 
+    /**
+     * @param string $table
+     * @return array
+     */
     protected function getTableColumn(string $table): array
     {
         if (!empty($this->tableColumns[$table])) {
@@ -157,6 +208,10 @@ class Generator extends BaseGenerator
         return $this->tableColumns[$table];
     }
 
+    /**
+     * @param string $table
+     * @return array
+     */
     protected function getColumns(string $table): array
     {
         if (version_compare('10.0.0', app()->version()) === 1) {
