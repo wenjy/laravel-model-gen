@@ -135,7 +135,9 @@ class Generator extends BaseGenerator
             if (str_contains($column['type_name'], 'int')) {
                 $type = 'int';
             } elseif ($column['name'] == 'created_at' || $column['name'] == 'updated_at') {
-                $type = '\Illuminate\Support\Carbon';
+                $type = 'Carbon';
+            } elseif ($column['type_name'] == 'json' || str_contains($column['comment'], 'json')) {
+                $type = 'array';
             } else {
                 $type = 'string';
             }

@@ -18,6 +18,10 @@ echo "<?php\n";
 namespace <?= $generator->ns ?>;
 
 use Illuminate\Database\Eloquent\Model;
+<?php if(!empty($properties['created_at'])): ?>
+use Illuminate\Support\Carbon;
+<?php endif; ?>
+
 
 /**
  * This is the model class for table "<?= $tableSchema['comment'] ?>".
@@ -40,8 +44,19 @@ class <?= $modelClassName ?> extends Model
      */
     protected $fillable = [
 <?php foreach ($properties as $property => $data): ?>
-<?php if($data['auto_increment'] === false): ?>
+<?php if(!($data['auto_increment'] === true || $property == 'created_at' || $property == 'updated_at')): ?>
         '<?= $property ?>',
+<?php endif; ?>
+<?php endforeach; ?>
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+<?php foreach ($properties as $property2 => $data2): ?>
+<?php if(str_contains($data2['type'], 'array')): ?>
+        '<?= $property2 ?>' => 'array',
 <?php endif; ?>
 <?php endforeach; ?>
     ];
