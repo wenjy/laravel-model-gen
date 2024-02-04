@@ -17,6 +17,7 @@ echo "<?php\n";
 
 namespace <?= $generator->ns ?>;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 <?php if(!empty($properties['created_at'])): ?>
 use Illuminate\Support\Carbon;
@@ -31,6 +32,8 @@ use Illuminate\Support\Carbon;
  */
 class <?= $modelClassName ?> extends Model
 {
+    use HasFactory;
+
     /**
      * @var string
      */
