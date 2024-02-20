@@ -28,13 +28,19 @@ php artisan gen:model [--table=] [--model=] [--conn=]
 test_comments 表结构为：
 ```sql
 CREATE TABLE `test_comments` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '评论标题',
-  `post_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '文章ID',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='测试评论表';
+    `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+    `title` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '评论标题',
+    `post_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '文章ID',
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    `aaa` decimal(10,0) NOT NULL DEFAULT '0',
+    `v` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+    `w` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT 'aaaa',
+    `a` text COLLATE utf8mb4_unicode_ci COMMENT 'json aa',
+    `json1` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'json 1',
+    `json2` json DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='测试评论表';
 ```
 
 执行 `php artisan gen:model --table=test_comments`
@@ -43,23 +49,34 @@ CREATE TABLE `test_comments` (
 ```php
 <?php
 /**
- * @date: 2024-01-31 20:17:19
+ * @date: 2024-02-04 05:39:19
  */
- 
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+
 
 /**
  * This is the model class for table "测试评论表".
  * @property int $id
  * @property string $title 评论标题
  * @property int $post_id 文章ID
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property string $aaa
+ * @property string|null $v
+ * @property string $w aaaa
+ * @property array|null $a json aa
+ * @property array|null $json1 json 1
+ * @property array|null $json2
  */
 class TestComment extends Model
 {
+    use HasFactory;
+
     /**
      * @var string
      */
@@ -71,8 +88,21 @@ class TestComment extends Model
     protected $fillable = [
         'title',
         'post_id',
-        'created_at',
-        'updated_at',
+        'aaa',
+        'v',
+        'w',
+        'a',
+        'json1',
+        'json2',
+    ];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'a' => 'array',
+        'json1' => 'array',
+        'json2' => 'array',
     ];
 }
 
