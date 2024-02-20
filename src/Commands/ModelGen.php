@@ -13,7 +13,6 @@ class ModelGen extends Command
 {
     /**
      * The name and signature of the console command.
-     *
      * @var string
      */
     protected $signature = 'gen:model
@@ -23,7 +22,6 @@ class ModelGen extends Command
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'generate a new model';
@@ -42,12 +40,21 @@ class ModelGen extends Command
     public function handle()
     {
         $this->generator->tableName = $this->option('table') ?? '*';
-        $this->generator->modelClass = $this->option('model');
+        $model = $this->option('model');
+        if ($model) {
+            if (($len = strrpos($model, "\\")) !== false) {
+                $modelClass = substr($model, $len + 1);
+                $this->generator->ns = substr($model, 0, $len);
+            } else {
+                $modelClass = $model;
+            }
+            $this->generator->modelClass = $modelClass;
+        }
         $this->generator->db = $this->option('conn');
         $this->info("Running '{$this->generator->getName()}'...");
         try {
             $this->generateCode();
-        }catch (GenException $e) {
+        } catch (GenException $e) {
             $this->warn($e->getMessage());
         }
     }
@@ -90,11 +97,11 @@ EOF;
                     } else {
                         do {
                             $answer = $this->choice($choice_question, [
-                                'y' ,
-                                'n' ,
-                                'ya' ,
-                                'na' ,
-                                'v' ,
+                                'y',
+                                'n',
+                                'ya',
+                                'na',
+                                'v',
                             ], 1);
 
                             if ($answer === 'v') {
@@ -120,7 +127,7 @@ EOF;
         }
 
         if (!array_sum($answers)) {
-           $this->info("\nNo files were chosen to be generated.\n");
+            $this->info("\nNo files were chosen to be generated.\n");
             return;
         }
 
@@ -131,7 +138,7 @@ EOF;
             }
         }
 
-        if ($this->generator->save($files, (array) $answers, $results)) {
+        if ($this->generator->save($files, (array)$answers, $results)) {
             $this->info("\nFiles were generated successfully!\n");
         } else {
             $this->error("\nSome errors occurred while generating the files.");

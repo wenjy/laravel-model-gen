@@ -89,7 +89,8 @@ class Generator extends BaseGenerator
                 'tableSchema' => $tableSchema,
                 'properties' => $this->generateProperties($tableColumn),
             ];
-            $path = app_path('Models') . DIRECTORY_SEPARATOR . $modelClassName . '.php';
+            // 截取命名空间后部分 例如 ns=App\Models\Test 文件夹则为 Models\Test
+            $path = app_path(substr($this->ns, strpos($this->ns, "\\") + 1)) . DIRECTORY_SEPARATOR . $modelClassName . '.php';
             if (app()->environment('testing')) {
                 $path = __DIR__ . '/../../../tests/test_models/' . $modelClassName . '.php';
             }

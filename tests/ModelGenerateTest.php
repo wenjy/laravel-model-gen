@@ -18,6 +18,12 @@ class ModelGenerateTest extends TestCase
         $this->assertTrue(true);
     }
 
+    public function testGenerateByNamespace()
+    {
+        $this->artisan(ModelGen::class, ['--table' => 'test_comments', '--model' => 'App\Test\TestComment']);
+        $this->assertTrue(true);
+    }
+
     public function testGetAllTable()
     {
         var_dump(Arr::pluck(Schema::getTables(), null, 'name'));
