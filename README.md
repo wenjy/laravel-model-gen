@@ -15,16 +15,16 @@ php artisan gen:model [--table=] [--model=] [--conn=] [--ns=]
 ```
 
 参数表名：`--table`
-不传入表名，默认生成所有表的model
+不传入表名，默认生成所有表的model，例如 `--table=test_comments`
 
-参数模型类名：`--model`
+参数模型类名：`--model`，例如 `--model=TestAbc`
 不传入模型类名，使用表名单数大驼峰命名方式
 
-参数数据库连接名：`--conn`
+参数数据库连接名：`--conn`，例如 `--conn=test_conn`
 不传入数据库连接名，使用默认的数据库连接
 
-参数命名空间：`--ns`
-不传入命名空间，默认使用 `App\Models`
+参数命名空间：`--ns`，例如 `--ns=App\Models\Tests`
+不传入命名空间，默认使用 `App\Models`，
 
 - 举例
 
