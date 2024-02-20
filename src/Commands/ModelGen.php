@@ -18,6 +18,7 @@ class ModelGen extends Command
     protected $signature = 'gen:model
                             {--table= : table name}
                             {--model= : model name}
+                            {--ns= : model namespace}
                             {--conn= : database connection name}';
 
     /**
@@ -40,17 +41,12 @@ class ModelGen extends Command
     public function handle()
     {
         $this->generator->tableName = $this->option('table') ?? '*';
-        $model = $this->option('model');
-        if ($model) {
-            if (($len = strrpos($model, "\\")) !== false) {
-                $modelClass = substr($model, $len + 1);
-                $this->generator->ns = substr($model, 0, $len);
-            } else {
-                $modelClass = $model;
-            }
-            $this->generator->modelClass = $modelClass;
-        }
+        $this->generator->modelClass = $this->option('model');
         $this->generator->db = $this->option('conn');
+        $ns = $this->option('ns');
+        if ($ns) {
+            $this->generator->ns = $ns;
+        }
         $this->info("Running '{$this->generator->getName()}'...");
         try {
             $this->generateCode();
