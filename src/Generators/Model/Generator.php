@@ -174,7 +174,7 @@ class Generator extends BaseGenerator
      */
     protected function getTables(): array
     {
-        if (version_compare('10.0.0', app()->version()) === 1) {
+        if (version_compare('10.34.0', app()->version()) === 1) {
             $sql = sprintf(
                 'select table_name as `name`, (data_length + index_length) as `size`, '
                 .'table_comment as `comment`, engine as `engine`, table_collation as `collation` '
@@ -217,7 +217,7 @@ class Generator extends BaseGenerator
      */
     protected function getColumns(string $table): array
     {
-        if (version_compare('10.0.0', app()->version()) === 1) {
+        if (version_compare('10.30.0', app()->version()) === 1) {
             $sql = sprintf(
                 'select column_name as `name`, data_type as `type_name`, column_type as `type`, '
                 .'collation_name as `collation`, is_nullable as `nullable`, '
