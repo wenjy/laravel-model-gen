@@ -20,7 +20,7 @@ class ModelGenerateTest extends TestCase
 
     public function testGenerateByNamespace()
     {
-        $this->artisan(ModelGen::class, ['--table' => 'test_comments', '--model' => 'App\Test\TestComment']);
+        $this->artisan(ModelGen::class, ['--table' => 'test_comments', '--model' => 'TestComment', '--ns' => 'App\Test']);
         $this->assertTrue(true);
     }
 
