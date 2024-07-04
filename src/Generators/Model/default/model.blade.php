@@ -23,11 +23,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 <?php endif; ?>
 
-
 /**
  * This is the model class for table "<?= $tableSchema['comment'] ?>".
 <?php foreach ($properties as $property => $data): ?>
- * @property <?= "{$data['type']} \${$property}"  . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
+ * @property <?= "{$data['type']} \${$property}" . ($data['comment'] ? ' ' . strtr($data['comment'], ["\n" => ' ']) : '') . "\n" ?>
 <?php endforeach; ?>
  */
 class <?= $modelClassName ?> extends Model
